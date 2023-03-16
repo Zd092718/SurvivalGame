@@ -5,6 +5,12 @@ using UnityEngine.InputSystem;
 
 public class PlayerController : MonoBehaviour
 {
+    [Header("Movement")]
+    [SerializeField] private float moveSpeed;
+    private Vector2 curMovementInput;
+
+
+    [Header("Look")]
     [SerializeField] private Transform cameraContainer;
     [SerializeField] private float minXLook;
     [SerializeField] private float maxXLook;
@@ -13,14 +19,37 @@ public class PlayerController : MonoBehaviour
     private float camCurXRot;
     private Vector2 mouseDelta;
 
+
+    //Components
+    private Rigidbody rb;
+
+    private void Awake()
+    {
+        rb = GetComponent<Rigidbody>();
+    }
+
     private void Start()
     {
         Cursor.lockState = CursorLockMode.Locked;
     }
 
+    private void FixedUpdate()
+    {
+        Move();
+    }
+
     private void LateUpdate()
     {
         CameraLook();
+    }
+
+    private void Move()
+    {
+        Vector3 dir = transform.forward * curMovementInput.y + transform.right * curMovementInput.x;
+        dir *= moveSpeed;
+        dir.y = rb.velocity.y;
+
+        rb.velocity = dir;
     }
 
     private void CameraLook()
@@ -45,5 +74,17 @@ public class PlayerController : MonoBehaviour
     {
         mouseDelta = context.ReadValue<Vector2>();
 
+    }
+
+    public void OnMoveInput(InputAction.CallbackContext context)
+    {
+        if (context.phase == InputActionPhase.Performed)
+        {
+            curMovementInput = context.ReadValue<Vector2>();
+        }
+        else if (context.phase == InputActionPhase.Canceled)
+        {
+            curMovementInput = Vector2.zero;
+        }
     }
 }
