@@ -5,7 +5,7 @@ using UnityEngine;
 using UnityEngine.UI;
 using UnityEngine.Events;
 
-public class PlayerNeeds : MonoBehaviour
+public class PlayerNeeds : MonoBehaviour, IDamageable
 {
     [SerializeField] private Need health;
     [SerializeField] private Need hunger;
@@ -119,4 +119,9 @@ public class Need
     {
         return curValue / maxValue;
     }
+}
+
+public interface IDamageable
+{
+    void TakeDamage(int amount);
 }
