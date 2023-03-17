@@ -8,9 +8,11 @@ public class PlayerController : MonoBehaviour
 {
     [Header("Movement")]
     [SerializeField] private float moveSpeed;
+    [SerializeField] private float sprintSpeed;
     [SerializeField] private float jumpForce;
     [SerializeField] private LayerMask groundLayerMask;
     private Vector2 curMovementInput;
+    private bool isSprinting;
 
 
     [Header("Look")]
@@ -45,11 +47,13 @@ public class PlayerController : MonoBehaviour
     {
         CameraLook();
     }
-
     private void Move()
     {
+
         Vector3 dir = transform.forward * curMovementInput.y + transform.right * curMovementInput.x;
+
         dir *= moveSpeed;
+
         dir.y = rb.velocity.y;
 
         rb.velocity = dir;
